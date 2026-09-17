@@ -112,7 +112,7 @@ llama.cpp만 호출합니다.
   열어 `llama-perplexity -f <corpus_path>`에 그대로 전달합니다. FiTuna가 이
   파일을 함께 묶거나 수정하거나 재배포하지 않습니다. 모든 문서 예시가 따르는
   관례대로 `.gitignore`는 `.txt`로 끝나는 `--out` 경로를 저장소에서 제외하며,
-  사용자가 corpus를 따로 받거나 제공합니다(`README.md`의 빠른 시작 참조).
+  사용자가 corpus를 따로 받거나 제공합니다(`README.ko.md`의 빠른 시작 참조).
 
 ---
 

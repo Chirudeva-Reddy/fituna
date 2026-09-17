@@ -2,8 +2,8 @@
 
 이 문서는 **대회 심사위원과 검증 전문기관**이 FiTuna를 직접 구동해 정상 동작을
 확인하기 위한 안내서다. FiTuna를 처음 보는 사람이 위에서부터 순서대로 따라오면
-추가 조사 없이 성공적인 실행에 도달하도록 작성했다. (README와 이 문서를 포함해 docs/ 아래 기술 문서까지 한국어가 기본이며,
-영어 사용자를 위한 [README.en.md](README.en.md)를 별도로 제공한다.)
+추가 조사 없이 성공적인 실행에 도달하도록 작성했다. (이 문서와 docs/ 아래 기술 문서는 한국어가 기본이다. README는 해외 기여자를 위해
+영어가 기본이며, 한국어판은 [README.ko.md](README.ko.md)로 제공한다.)
 
 이 문서의 모든 명령·출력·소요시간은 저장소의
 [`docs/RESULTS.md`](docs/RESULTS.md)에 이미 실측으로 기록된 값이거나, 이 문서를
@@ -467,7 +467,7 @@ printf '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}\n{"jsonrpc":"
 결과가 4-3의 `doctor` 출력과 같은 하드웨어를 가리키는지가 확인 포인트다.
 `fituna_recommend` 도구는 같은 형태로 4-6과 동일한 탐색을 수행해 추천을
 JSON으로 반환한다 — 실제 AI 에이전트가 이 서버를 붙이는 방법은
-[README "MCP 서버"](README.md#mcp-서버--ai-에이전트에게-추측이-아닌-실측-답변을)를
+[README "MCP 서버"](README.ko.md#mcp-서버--ai-에이전트에게-추측이-아닌-실측-답변을)를
 참고한다.
 
 ---
@@ -939,7 +939,7 @@ ERROR fituna: could not reach the HuggingFace dataset-viewer API: The read opera
 
 | 문서 | 내용 |
 |---|---|
-| [README.md](README.md) | 프로젝트 개요, 기능, 설계 요약 (한국어 · [영어판](README.en.md)) |
+| [README.md](README.md) | 프로젝트 개요, 기능, 설계 요약 (영어 · [한국어판](README.ko.md)) |
 | [docs/RESULTS.md](docs/RESULTS.md) | 실측 결과 전문 — 5회 실기 측정, 타이밍, 편차 분석 |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | 모듈 구조, 탐색 알고리즘, 오류·종료 코드 처리 |
 | [docs/USE_CASES.md](docs/USE_CASES.md) | 사용 시나리오 |
