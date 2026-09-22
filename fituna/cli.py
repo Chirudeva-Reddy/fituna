@@ -137,6 +137,16 @@ def _build_parser() -> argparse.ArgumentParser:
             "(slower) estimate."
         ),
     )
+    run.add_argument(
+        "--quality-metric",
+        choices=["ppl", "kld"],
+        default="ppl",
+        dest="quality_metric",
+        help=(
+            "quality evaluation metric: 'ppl' (perplexity loss, default) or "
+            "'kld' (KL divergence against baseline model logits)"
+        ),
+    )
     run.add_argument("--out", default="./out", help="working/output directory")
     run.add_argument("--json", action="store_true", help="emit JSON report to stdout")
     run.add_argument(
@@ -454,6 +464,7 @@ def _cmd_run(args: argparse.Namespace) -> int:
         # --ppl-chunks 0 (or negative) means "full corpus" -> None, matching
         # compute_perplexity's own "no limit" sentinel.
         ppl_chunks=args.ppl_chunks if args.ppl_chunks > 0 else None,
+        quality_metric=args.quality_metric,
     )
 
     cache = ResultCache(work_dir / ".fituna_cache.sqlite3") if args.resume else None

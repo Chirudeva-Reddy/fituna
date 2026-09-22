@@ -66,7 +66,7 @@ from fituna.config import (
     TargetSpec,
 )
 from fituna.model_info import model_fingerprint
-from fituna.quality import compute_perplexity, evaluate_quality
+from fituna.quality import compute_perplexity, evaluate_quality, generate_base_logits
 from fituna.quantize import quantize
 from fituna.report import build_run_command, build_server_command
 
@@ -207,6 +207,19 @@ def search(
                 corpus_fp,
             )
 
+    base_logits_path: Optional[Path] = None
+    if target.quality_metric == "kld":
+        base_logits_path = work_dir / f"{model_info.base_gguf_path.stem}.kld"
+        if not base_logits_path.exists():
+            progress("generating baseline logits for KLD measurement on base GGUF")
+            generate_base_logits(
+                model_info.base_gguf_path,
+                wikitext_path,
+                base_logits_path,
+                binaries,
+                target.ppl_chunks,
+            )
+
     best_effort: Optional[SearchResult] = None
     best_effort_speed = float("-inf")
     timed_out = False
@@ -233,9 +246,26 @@ def search(
         )
         if quality_res is None:
             progress(f"[{quant}] evaluating quality")
-            quality_res = evaluate_quality(
-                quant, cand_gguf, baseline_ppl, wikitext_path, binaries, target.ppl_chunks
-            )
+            if target.quality_metric == "kld":
+                quality_res = evaluate_quality(
+                    quant,
+                    cand_gguf,
+                    baseline_ppl,
+                    wikitext_path,
+                    binaries,
+                    target.ppl_chunks,
+                    metric=target.quality_metric,
+                    base_logits_path=base_logits_path,
+                )
+            else:
+                quality_res = evaluate_quality(
+                    quant,
+                    cand_gguf,
+                    baseline_ppl,
+                    wikitext_path,
+                    binaries,
+                    target.ppl_chunks,
+                )
             if cache is not None:
                 cache.put_quality(model_fp, quality_res, target.ppl_chunks, corpus_fp)
 
