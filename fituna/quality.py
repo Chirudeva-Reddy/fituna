@@ -20,8 +20,9 @@ from fituna.config import BinaryPaths, FiTunaError, QualityResult
 # ceiling. Bump via PPL_TIMEOUT_SEC module attribute if a caller needs more.
 PPL_TIMEOUT_SEC = 1800
 
-_PPL_RE = re.compile(r"Final estimate:\s*PPL\s*=\s*([\d.]+)")
-_KLD_RE = re.compile(r"Final estimate:\s*KLD\s*=\s*([\d.]+)", re.IGNORECASE)
+_FLOAT_PATTERN = r"[+\-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+\-]?\d+)?"
+_PPL_RE = re.compile(rf"Final estimate:\s*PPL\s*=\s*({_FLOAT_PATTERN})", re.IGNORECASE)
+_KLD_RE = re.compile(rf"Final estimate:\s*KLD\s*=\s*({_FLOAT_PATTERN})", re.IGNORECASE)
 
 
 def _parse_perplexity(text: str) -> Optional[float]:
@@ -40,6 +41,7 @@ def _parse_kld(text: str) -> Optional[float]:
     """Extract the final KLD value from llama-perplexity's combined
     stdout/stderr, e.g. a line like:
         Final estimate: KLD = 0.002410 +/- 0.000080
+        Final estimate: KLD = 1.25e-04 +/- 0.000080
     Returns None if no such line is present.
     """
     match = _KLD_RE.search(text)
@@ -314,6 +316,9 @@ def _self_check() -> None:
     )
     assert _parse_kld(kld_sample) == 0.002410
     assert _parse_kld("no kld line here") is None
+    assert _parse_kld("Final estimate: KLD = 1.25e-04 +/- 0.000010") == 0.000125
+    assert _parse_kld("Final estimate: KLD = 3.45E-5 +/- 0.000010") == 3.45e-5
+    assert _parse_perplexity("Final estimate: PPL = 6.12e+01 +/- 0.02") == 61.2
 
     # 2. quality_loss_pct arithmetic, mirrored from evaluate_quality's formula.
     baseline = 5.80

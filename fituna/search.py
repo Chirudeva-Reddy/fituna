@@ -240,7 +240,9 @@ def search(
         cand_gguf = quantize(model_info.base_gguf_path, quant, work_dir, binaries, model_fp)
 
         quality_res = (
-            cache.get_quality(model_fp, quant, target.ppl_chunks, corpus_fp)
+            cache.get_quality(
+                model_fp, quant, target.ppl_chunks, corpus_fp, metric=target.quality_metric
+            )
             if cache is not None
             else None
         )

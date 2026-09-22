@@ -254,3 +254,30 @@ def test_evaluate_quality_kld_requires_logits(tmp_path):
             metric="kld",
             base_logits_path=None,
         )
+
+
+def test_compute_kld_scientific_notation(monkeypatch, tmp_path):
+    bins = _binaries(tmp_path)
+    cand_gguf = tmp_path / "cand.gguf"
+    wiki = tmp_path / "wiki.txt"
+    base_logits = tmp_path / "base.kld"
+    cand_gguf.touch()
+    wiki.touch()
+    base_logits.touch()
+
+    def fake_run(cmd, **kwargs):
+        return subprocess.CompletedProcess(
+            args=cmd,
+            returncode=0,
+            stdout=(
+                "Final estimate: KLD = 1.25e-04 +/- 0.000010\n"
+                "Final estimate: PPL = 6.1200 +/- 0.020\n"
+            ),
+            stderr="",
+        )
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    kld, ppl = compute_kld(cand_gguf, wiki, base_logits, bins)
+    assert kld == 0.000125
+    assert ppl == 6.12
+
